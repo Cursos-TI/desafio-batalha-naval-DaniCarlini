@@ -1,0 +1,257 @@
+# include <stdio.h>
+#include <stdlib.h>
+
+#define TamLinha 10
+#define Tamcoluna 10
+#define TamNavio 3
+#define Habilidade 5
+
+int main (){
+ // tabuleiro deve ser 10x10
+ int tabuleiro [TamLinha][Tamcoluna];
+
+ //iniciando o tabuleiro com 0 (água)
+
+ for(int linha = 0; linha < TamLinha; linha++){
+  for(int coluna = 0; coluna < Tamcoluna; coluna++){
+    tabuleiro [linha][coluna] = 0;
+  }
+
+ }
+  // Posicionando os 4 navios
+  // Navio horizontal
+    for (int linha = 0; linha < TamNavio; linha++) {
+        tabuleiro[9][linha-7] = 3;
+    }
+
+    // Navio vertical
+    for (int coluna = 0; coluna < TamNavio; coluna++) {
+        tabuleiro[0 + coluna][0] = 3;
+    }
+
+    // Navio diagonal principal (↘)
+    for (int linha = 0; linha < TamNavio; linha++) {
+        tabuleiro[linha][5 + linha] = 3;
+    }
+
+    // Navio diagonal secundária (↙)
+    for (int coluna = 0; coluna < TamNavio; coluna++) {
+        tabuleiro[1 + coluna][9 - coluna] = 3;
+    }
+
+
+    printf("\n***Tabuleiro Batalha Naval***\n\n");
+
+     printf("   ");
+
+     // Loop que usa caracteres para representar as colunas de A a J.
+ 
+    for (char letra = 'A'; letra <= 'J'; letra++)
+    {
+        // Imprime a letra seguida de um espaço para formatação.
+        printf("%c ", letra);
+    }
+
+    // Pula para a próxima linha após imprimir todas as letras.
+    printf("\n");
+
+    // Área de Impressão Das Linhas Do Tabuleiro.
+    
+    for (int linha = 0; linha < TamLinha; linha++)
+    {
+
+        // Imprime o número da linha com formatação de 2 dígitos (ex: " 1", " 2", ..., "10").
+        // linha + 1 porque o usuário vê de 1 a 10, mas a matriz usa 0 a 9.
+        printf("%2d ", linha + 1);
+
+          for (int coluna = 0; coluna < Tamcoluna; coluna++)
+        {
+            printf("%d ", tabuleiro [linha] [coluna]);
+        }
+
+        // Pula para a próxima linha após imprimir todas as colunas da linha atual.
+        printf("\n");
+    }
+
+    // Habilidade em Cone apontado para baixo
+    int cone [Habilidade] [Habilidade];
+    int origemConeLinha     = 2; 
+    int origemConeColuna    = 3;
+
+    printf("\n--- Construindo Matriz: CONE ---\n");
+
+    for (int i = 0; i < Habilidade; i++) {
+        for (int j = 0; j < Habilidade; j++) {
+                 if (j >= (2 - i) && j <= (2 + i)) {
+                cone[i][j] = 1;
+            } else {
+                cone[i][j] = 0;
+            }
+        }
+    }
+
+    /* Exibe a matriz do Cone */
+    printf("Matriz do Cone (5x5):\n");
+    for (int i = 0; i < Habilidade; i++) {
+        printf("  ");
+        for (int j = 0; j < Habilidade; j++) {
+            printf(" %d", cone[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+
+        
+  // Habilidade em Cruz
+     int cruz[Habilidade][Habilidade];       
+     int origemCruzLinha     = 7;
+     int origemCruzColuna    = 2;
+  
+     printf("\n--- Construindo Matriz: CRUZ ---\n");
+
+    for (int i = 0; i < Habilidade; i++) {
+        for (int j = 0; j < Habilidade; j++) {
+    if (i == 2 || j == 2) {
+                cruz[i][j] = 1;
+            } else {
+                cruz[i][j] = 0;
+            }
+        }
+    }
+
+    /* Exibe a matriz da Cruz */
+    printf("Matriz da Cruz (5x5):\n");
+    for (int i = 0; i < Habilidade; i++) {
+        printf("  ");
+        for (int j = 0; j < Habilidade; j++) {
+            printf(" %d", cruz[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+
+    // Habilidade em Octaedro
+
+    int octaedro [Habilidade] [Habilidade];
+    int origemOctaedroLinha = 7;
+    int origemOctaedroColuna = 7;
+   
+    printf("\n--- Construindo Matriz: OCTAEDRO ---\n");
+
+    for (int i = 0; i < Habilidade; i++) {
+        for (int j = 0; j < Habilidade; j++) {
+
+             if (abs(i - 2) + abs(j - 2) <= 2){ //distância absoluta
+
+                octaedro [i] [j] = 1;
+            } else {
+                octaedro [i][j] = 0;
+            }
+        }
+    }
+
+    /* Exibe a matriz do Octaedro */
+    printf("Matriz do Octaedro (5x5):\n");
+    for (int i = 0; i < Habilidade; i++) {
+        printf("  ");
+        for (int j = 0; j < Habilidade; j++) {
+            printf(" %d", octaedro[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+
+    // Cone no tabuleiro indicado pelo número 1
+    
+    for (int i = 0; i < 5; i++){
+
+        for (int j = 0; j < 5; j++){
+
+            int linhaTabuleiro = origemConeLinha + i - 2;
+            int colunaTabuleiro = origemConeColuna + j - 2;
+
+            if (linhaTabuleiro >= 0 && linhaTabuleiro < TamLinha &&
+            colunaTabuleiro >= 0 && colunaTabuleiro < Tamcoluna){
+
+                if (cone [i] [j] == 1){
+                    tabuleiro [linhaTabuleiro] [colunaTabuleiro] = 1;
+                }
+            }
+        }
+    }
+
+    // Cruz no tabuleiro indicado pelo número 2
+  
+
+    for (int i = 0; i < 5; i++){
+
+        for (int j = 0; j < 5; j++){
+
+            if (cruz [i] [j] == 1){
+
+                int linhaTabuleiro = origemCruzLinha + i - 2;
+                int colunaTabuleiro = origemCruzColuna + j - 2;
+
+                if (linhaTabuleiro >= 0 && linhaTabuleiro < TamLinha &&
+                colunaTabuleiro >= 0 && colunaTabuleiro < Tamcoluna){
+                    tabuleiro [linhaTabuleiro] [colunaTabuleiro] = 2;
+                }
+            }
+        }
+    }
+
+    // Octaedro no tabuleiro indicado pelo número 4
+    
+
+    for (int i = 0; i < Habilidade; i++){
+
+        for (int j = 0; j < Habilidade; j++){
+
+            if (octaedro [i] [j] == 1){
+
+                int linhaTabuleiro = origemOctaedroLinha + i - 2;
+                int colunaTabuleiro = origemOctaedroColuna + j - 2;
+
+                if (linhaTabuleiro >= 0 && linhaTabuleiro < TamLinha &&
+                colunaTabuleiro >= 0 && colunaTabuleiro < Tamcoluna){
+                    tabuleiro [linhaTabuleiro] [colunaTabuleiro] = 4;
+                }
+            }
+        }
+    }
+
+    printf("\n Tabuleiro com habilidades \n");
+
+    printf("   ");
+     // Loop que usa caracteres para representar as colunas de A a J.
+ 
+    for (char letra = 'A'; letra <= 'J'; letra++)
+    {
+        // Imprime a letra seguida de um espaço para formatação.
+        printf("%c ", letra);
+    }
+
+    // Pula para a próxima linha após imprimir todas as letras.
+    printf("\n");
+
+    // Área de Impressão Das Linhas Do Tabuleiro.
+    
+    for (int linha = 0; linha < TamLinha; linha++)
+    {
+
+        // Imprime o número da linha com formatação de 2 dígitos (ex: " 1", " 2", ..., "10").
+        // linha + 1 porque o usuário vê de 1 a 10, mas a matriz usa 0 a 9.
+        printf("%2d ", linha + 1);
+
+          for (int coluna = 0; coluna < Tamcoluna; coluna++)
+        {
+            printf("%d ", tabuleiro [linha] [coluna]);
+        }
+
+        // Pula para a próxima linha após imprimir todas as colunas da linha atual.
+        printf("\n");
+    }
+    
+
+    return 0;
+}
